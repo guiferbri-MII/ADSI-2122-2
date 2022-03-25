@@ -11,7 +11,6 @@ import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
 
 import data.streaming.sources.ADSITwitterSource;
 import lambda.ingestion.sinks.MongoDBSinkFunction;
-//import lambda.ingestion.utils.LogginFactory;
 import lambda.utils.Utils;
 
 public class DataIngestor implements Runnable {

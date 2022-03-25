@@ -18,17 +18,14 @@ import lambda.utils.Utils;
 
 public class MongoDBSinkFunction implements SinkFunction<String> {
 
-	// 1.2: Definir la función necaria para guardar los datos en Mongo.
-	// Necesitaremos completar el DAO.
-
 	private static final long serialVersionUID = 1L;
 	private static List<String> tweets;
 	private static MongoDBDAO dao;
 
 	public MongoDBSinkFunction() {
-		this.tweets = new LinkedList<>();
-		this.dao = SingletonMongoDBDAO.getMongoDBDAO();
-		this.dao.deleteDataLake();
+		tweets = new LinkedList<>();
+		dao = SingletonMongoDBDAO.getMongoDBDAO();
+		dao.deleteDataLake();
 	}
 
 	public void invoke(String value) {
@@ -36,21 +33,17 @@ public class MongoDBSinkFunction implements SinkFunction<String> {
 	}
 
 	synchronized private void save(String value) {
-		this.tweets.add(value);
-		if (this.tweets.size() >= Utils.PACKAGE_SIZE) {
-			Morphia m = this.dao.getMorphia();
-			Datastore ds = this.dao.getDatastore();
-			
-			List<TweetDTO> jsons = this.tweets.stream()
-					.map((String s) ->  
-						m.fromDBObject(ds, TweetDTO.class, (DBObject) BasicDBObject.parse(s))
-					)
+		tweets.add(value);
+		if (tweets.size() >= Utils.PACKAGE_SIZE) {
+			Morphia m = dao.getMorphia();
+			Datastore ds = dao.getDatastore();
+
+			List<TweetDTO> jsons = tweets.stream()
+					.map((String s) -> m.fromDBObject(ds, TweetDTO.class, (DBObject) BasicDBObject.parse(s)))
 					.collect(Collectors.toList());
 			ds.save(jsons);
-			this.tweets.clear();
+			tweets.clear();
 		}
 	}
-	
-	
 
 }
