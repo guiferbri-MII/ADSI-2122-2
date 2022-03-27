@@ -31,6 +31,7 @@ public class BatchJob implements Job {
 
 	synchronized public void process() {
 		List<String> hashtags = new LinkedList<>();
+		List<String> idiomas = new LinkedList<>();
 		Datastore datastore = dao.getDatastore();
 
 		List<TweetDTO> datos = dao.getDataLake();
@@ -39,9 +40,11 @@ public class BatchJob implements Job {
 		.filter(x -> x.startsWith(Utils.HASH))
 		.collect(Collectors.toList());
 		hashtags.addAll(tags);
+		idiomas = datos.stream().flatMap(x -> Stream.of(x.getLanguage())).collect(Collectors.toList());
 
 		Map<String, Long> freqs = hashtags.stream().collect(Collectors.groupingBy(x -> x, Collectors.counting()));
-		datastore.save(new OfflineModelDTO(freqs));
+		Map<String, Long> freqIdiomas = idiomas.stream().collect(Collectors.groupingBy(x -> x, Collectors.counting()));
+		datastore.save(new OfflineModelDTO(freqs, freqIdiomas));
 	}
 
 }

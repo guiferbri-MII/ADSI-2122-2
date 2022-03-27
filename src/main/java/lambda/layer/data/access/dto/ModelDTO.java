@@ -16,11 +16,16 @@ public class ModelDTO {
 	private List<String> claves;
 	
 	private List<Long> frecuencias;
+
+	private List<String> idiomas;
+	private List<Long> freqIdiomas;
 	
-	public ModelDTO(Map<String, Long> map) {
+	public ModelDTO(Map<String, Long> map, Map<String, Long> mapIdiomas) {
 		this.timestamp = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
 		this.claves = new ArrayList<String>(map.keySet());
 		this.frecuencias = claves.stream().map(x->map.get(x)).collect(Collectors.toList());
+		this.idiomas = new ArrayList<String>(mapIdiomas.keySet());
+		this.freqIdiomas = idiomas.stream().map(x->mapIdiomas.get(x)).collect(Collectors.toList());
 	}
 	
 	public ModelDTO() {
@@ -51,6 +56,22 @@ public class ModelDTO {
 		this.frecuencias = frecuencias;
 	}
 
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	public void setIdiomas(List<String> idiomas) {
+		this.idiomas = idiomas;
+	}
+
+	public List<Long> getFrecuenciasIdiomas() {
+		return freqIdiomas;
+	}
+
+	public void setFrecuenciasIdiomas(List<Long> freqIdiomas) {
+		this.freqIdiomas = freqIdiomas;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -78,7 +99,7 @@ public class ModelDTO {
 
 	@Override
 	public String toString() {
-		return "ModelDTO [timestamp=" + timestamp + ", claves=" + claves + ", frecuencias=" + frecuencias + "]";
+		return "ModelDTO [timestamp=" + timestamp + ", claves=" + claves + ", frecuencias=" + frecuencias + ", idiomas=" + idiomas + ", freqIdiomas=" + freqIdiomas + "]";
 	}
 
 	

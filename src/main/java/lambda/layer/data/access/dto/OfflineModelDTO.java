@@ -12,7 +12,7 @@ public class OfflineModelDTO extends ModelDTO{
 		super();
 	}
 
-	public OfflineModelDTO(Map<String, Long> map) {
-		super(map);
+	public OfflineModelDTO(Map<String, Long> map, Map<String, Long> mapIdiomas) {
+		super(map, mapIdiomas);
 	}
 }

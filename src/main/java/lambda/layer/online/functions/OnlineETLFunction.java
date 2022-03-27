@@ -33,6 +33,7 @@ public class OnlineETLFunction extends ProcessAllWindowFunction<String, String, 
 	public void process(ProcessAllWindowFunction<String, String, TimeWindow>.Context arg0, Iterable<String> iterable,
 			Collector<String> collector) throws Exception {
 		List<String> hashtags = new LinkedList<>();
+		List<String> idiomas = new LinkedList<>();
 		Morphia morphia = dao.getMorphia();
 		Datastore datastore = dao.getDatastore();
 
@@ -42,10 +43,13 @@ public class OnlineETLFunction extends ProcessAllWindowFunction<String, String, 
 			List<String> tags = Stream.of(elem.getText().split(Utils.WHITESPACE))
 					.filter(x -> x.startsWith(Utils.HASH)).collect(Collectors.toList());
 			hashtags.addAll(tags);
+
+			idiomas.add(elem.getLanguage());
 		}
 
 		Map<String, Long> freqs = hashtags.stream().collect(Collectors.groupingBy(x -> x, Collectors.counting()));
-		datastore.save(new OnlineModelDTO(freqs));
+		Map<String, Long> freqIdiomas = idiomas.stream().collect(Collectors.groupingBy(x -> x, Collectors.counting()));
+		datastore.save(new OnlineModelDTO(freqs, freqIdiomas));
 	}
 
 }
